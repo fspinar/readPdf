@@ -1,0 +1,59 @@
+# -*- coding: utf-8 -*-
+"""
+Created on Mon Jul  6 12:10:46 2020
+
+@author: fatih
+"""
+
+allDir = "D:\BFINACAnalysis\BF_INAC\Slayer\Figures_part3\\"
+name2saveCropped = 'C:\Trial\\Cropped\\'
+name2saveTxtDir = 'C:\Trial\\MulticompareTxt\\'
+dir2savePNGs = 'C:\Trial\PNGs\\'
+import os
+import pytesseract as tess
+tess.pytesseract.tesseract_cmd = r"C:\Program Files\Tesseract-OCR\tesseract.exe"
+from wand.image import Image
+for sessions in os.listdir(allDir):
+    fileDir =  allDir + sessions + "\\"
+    nameofOriginalFigure =  allDir + sessions 
+    for f in os.listdir(fileDir):
+       
+     pdf_file = fileDir + f 
+     print(pdf_file)
+     #files = []
+     from wand.image import Image
+     with(Image(filename=pdf_file, resolution = 500)) as conn: 
+         for index, image in enumerate(conn.sequence):
+             beg = [i for i in range(len(nameofOriginalFigure)) if nameofOriginalFigure.startswith("\\", i)]
+             end = [i for i in range(len(nameofOriginalFigure)) if nameofOriginalFigure.startswith("_", i)] 
+             sessionName = nameofOriginalFigure[beg[-1]+1 : end[-1]]
+             name2saveTxt = name2saveTxtDir +  sessionName + "\\" + os.path.splitext(f)[0] + '.txt'
+             if not os.path.exists(name2saveTxt):
+                 image_name = dir2savePNGs + sessions + "\\" +  os.path.splitext(f)[0] + '.png'
+                 tempDir = dir2savePNGs + sessions + "\\"
+                 if not os.path.exists(tempDir):
+                  os.mkdir(tempDir)
+                  
+                 Image(image).save(filename = image_name)
+                 #files.append(image_name)
+                 from PIL import Image
+                 im = Image.open(image_name)
+                 width, height = im.size 
+                 im_crop = im.crop((0.58*width, 0.67*height, 0.65*width, 0.80*height))
+                 os.remove(image_name)
+                 name2save = name2saveCropped + sessionName + "\\" +  os.path.splitext(f)[0] + '.png'
+                 tempDir = name2saveCropped + sessionName + "\\"
+                 if not os.path.exists(tempDir):
+                  os.mkdir(tempDir)
+
+                 im_crop.save(name2save,quality=95)
+                 img = Image.open(name2save)
+                 text = tess.image_to_string(img)
+                 tempDir = name2saveTxtDir +  sessionName + "\\"
+                 if not os.path.exists(tempDir):
+                  os.mkdir(tempDir)
+
+                 text_file = open(name2saveTxt , "wt")
+                 n = text_file.write(text)
+                 text_file.close()
+                # os.remove(image_name)
