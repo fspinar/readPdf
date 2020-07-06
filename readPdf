@@ -1,3 +1,93 @@
+
+import os
+import pytesseract as tess
+tess.pytesseract.tesseract_cmd = r"C:\Program Files\Tesseract-OCR\tesseract.exe"
+#from wand.image import Image
+#from PIL import Image as img
+#from wand.image import Image as img2
+import numpy as np
+from wand.image import Image
+import time
+t0= time.clock()
+for sessions in os.listdir(allDir):
+    fileDir =  allDir + sessions + "\\"
+    nameofOriginalFigure =  allDir + sessions 
+    for f in os.listdir(fileDir):
+       
+     pdf_file = fileDir + f 
+     print(pdf_file)
+     #files = []
+    # from wand.image import Image
+     with(Image(filename=pdf_file, resolution = 500)) as image: 
+        # for index, image in enumerate(conn.sequence):
+             beg = [i for i in range(len(nameofOriginalFigure)) if nameofOriginalFigure.startswith("\\", i)]
+             end = [i for i in range(len(nameofOriginalFigure)) if nameofOriginalFigure.startswith("_", i)] 
+             sessionName = nameofOriginalFigure[beg[-1]+1 : end[-1]]
+             name2saveTxt = name2saveTxtDir +  sessionName + "\\" + os.path.splitext(f)[0] + '.txt'
+             if not os.path.exists(name2saveTxt):
+                 image_name = dir2savePNGs + sessions + "\\" +  os.path.splitext(f)[0] + '.png'
+                 tempDir = dir2savePNGs + sessions + "\\"
+                 if not os.path.exists(tempDir):
+                  os.mkdir(tempDir)
+                  
+                # image 
+                 array = np.array(image)
+                 t1 = time.clock() - t0
+                 print(t1)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+########################################################
+
+
+
+
 # -*- coding: utf-8 -*-
 """
 Created on Mon Jul  6 12:10:46 2020
